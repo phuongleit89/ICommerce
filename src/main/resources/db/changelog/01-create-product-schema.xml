@@ -18,10 +18,10 @@
             <column name="sku" type="varchar(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="price" type="decimal">
+            <column name="price" type="double">
                 <constraints nullable="false"/>
             </column>
-            <column name="quality" type="int">
+            <column name="quantity" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>
