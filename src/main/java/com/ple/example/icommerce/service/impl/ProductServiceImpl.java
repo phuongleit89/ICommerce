@@ -3,6 +3,7 @@ package com.ple.example.icommerce.service.impl;
 import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.ProductRequest;
 import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.exp.CommerceBadRequestException;
 import com.ple.example.icommerce.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(ProductRequest productRequest) {
-        // TODO: validate sku is existing
+        validateSku(productRequest.getSku());
 
         Product product = new Product();
         BeanUtils.copyProperties(productRequest, product);
@@ -41,10 +42,20 @@ public class ProductServiceImpl implements ProductService {
             return productOpt;
         }
 
-        // TODO: validate sku is existing
         Product product = productOpt.get();
+        if (!productRequest.getSku().equalsIgnoreCase(product.getSku())) {
+            validateSku(productRequest.getSku());
+        }
+
         BeanUtils.copyProperties(productRequest, product);
         return Optional.of(productRepository.save(product));
+    }
+
+    private void validateSku(String sku) {
+        Product foundBySku = productRepository.findBySku(sku);
+        if (foundBySku != null) {
+            throw new CommerceBadRequestException(CommerceBadRequestException.PRODUCT_SKU_IS_EXISTING);
+        }
     }
 
 }
