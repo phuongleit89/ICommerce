@@ -5,15 +5,21 @@ import com.ple.example.icommerce.dto.ProductRequest;
 import com.ple.example.icommerce.dto.ProductResponse;
 import com.ple.example.icommerce.entity.Product;
 import com.ple.example.icommerce.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
+@Validated
+@Slf4j
 public class ProductController {
 
     @Autowired
@@ -21,7 +27,8 @@ public class ProductController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<ProductResponse> create(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest productRequest) {
+        log.trace("Create product: {}", productRequest);
         Product createdProduct = productService.create(productRequest);
         if (createdProduct == null) {
             return ResponseEntity.notFound().build();
@@ -30,7 +37,8 @@ public class ProductController {
     }
 
     @GetMapping("/{key}")
-    public ResponseEntity<ProductResponse> get(@PathVariable("key") Long key) {
+    public ResponseEntity<ProductResponse> get(@NotNull @PathVariable("key") Long key) {
+        log.trace("Get detail product: #key: {}", key);
         Optional<Product> product = productService.get(key);
         if (product.isPresent()) {
             return ResponseEntity.ok(fromEntity(product.get()));
@@ -39,8 +47,9 @@ public class ProductController {
     }
 
     @PutMapping("/{key}")
-    public ResponseEntity<ProductResponse> update(@PathVariable("key") Long key,
-                                                  @RequestBody ProductRequest productRequest ) {
+    public ResponseEntity<ProductResponse> update(@NotNull @PathVariable("key") Long key,
+                                                  @Valid @RequestBody ProductRequest productRequest ) {
+        log.trace("Update the existing product: #key: {}, #product: {}", key, productRequest);
         Optional<Product> product = productService.update(key, productRequest);
         if (product.isPresent()) {
             return ResponseEntity.ok(fromEntity(product.get()));

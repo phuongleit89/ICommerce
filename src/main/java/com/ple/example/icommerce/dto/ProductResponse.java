@@ -25,6 +25,6 @@ public class ProductResponse {
     private Double price;
 
     @JsonProperty("quantity")
-    private int quantity;
+    private Integer quantity;
 
 }
