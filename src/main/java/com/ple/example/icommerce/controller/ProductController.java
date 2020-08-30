@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/{key}")
-    public ResponseEntity<ProductResponse> get(@NotNull @PathVariable("key") Long key) {
+    public ResponseEntity<ProductResponse> get(@NotNull @Min(value = 0) @PathVariable("key") Long key) {
         log.trace("Get detail product: #key: {}", key);
         Optional<Product> product = productService.get(key);
         if (product.isPresent()) {
@@ -47,7 +48,7 @@ public class ProductController {
     }
 
     @PutMapping("/{key}")
-    public ResponseEntity<ProductResponse> update(@NotNull @PathVariable("key") Long key,
+    public ResponseEntity<ProductResponse> update(@NotNull @Min(value = 0) @PathVariable("key") Long key,
                                                   @Valid @RequestBody ProductRequest productRequest ) {
         log.trace("Update the existing product: #key: {}, #product: {}", key, productRequest);
         Optional<Product> product = productService.update(key, productRequest);

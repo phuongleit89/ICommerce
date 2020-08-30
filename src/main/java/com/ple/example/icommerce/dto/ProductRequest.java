@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -27,10 +28,12 @@ public class ProductRequest {
 
     @JsonProperty("price")
     @NotNull(message = "Product price can not be null")
+    @Min(value = 0, message = "Product price should not be lesser than 0")
     private Double price;
 
     @JsonProperty("quantity")
     @NotNull(message = "Product quantity can not be null")
+    @Min(value = 0, message = "Product quantity should not be lesser than 0")
     private Integer quantity;
 
 }
