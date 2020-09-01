@@ -1,6 +1,8 @@
 package com.ple.example.icommerce.controller;
 
 
+import com.ple.example.icommerce.dto.ProductFilter;
+import com.ple.example.icommerce.dto.ProductPageResults;
 import com.ple.example.icommerce.dto.ProductRequest;
 import com.ple.example.icommerce.dto.ProductResponse;
 import com.ple.example.icommerce.entity.Product;
@@ -8,14 +10,23 @@ import com.ple.example.icommerce.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/product")
@@ -58,12 +69,81 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ProductPageResults> search(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String sku,
+            @RequestParam(defaultValue = "0") double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "0") int minQuantity,
+            @RequestParam(required = false) Integer maxQuantity,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "key,desc") String[] sort) {
+
+        Pageable pagingSort = PageRequest.of(page, size, getSort(sort));
+        ProductFilter productFilter = ProductFilter.builder()
+                .name(name)
+                .sku(sku)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .minQuantity(minQuantity)
+                .maxQuantity(maxQuantity)
+                .pagingSort(pagingSort).build();
+
+        log.trace("Search product: #filter: {}", productFilter);
+
+        Page<Product> productPage = productService.search(productFilter);
+        List<Product> products = productPage.getContent();
+        if (CollectionUtils.isEmpty(products)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<ProductResponse> productResponses = products.stream()
+                .map(product -> fromEntity(product)).collect(Collectors.toList());
+        ProductPageResults pageResults = ProductPageResults.builder()
+                .products(productResponses)
+                .currentPage(productPage.getNumber())
+                .totalPages(productPage.getTotalPages())
+                .totalItems(productPage.getTotalElements())
+                .build();
+
+        return new ResponseEntity<>(pageResults, HttpStatus.OK);
+    }
+
+    private Sort getSort(String[] sort) {
+        List<Order> orders = new ArrayList<>();
+        if (sort[0].contains(",")) {
+            // with sort more than 2 fields
+            // sort=[sortOrder]
+            // sortOrder="field, direction"
+            for (String sortOrder : sort) {
+                String[] sortItem = sortOrder.split(",");
+                orders.add(new Order(getSortDirection(sortItem[1]), sortItem[0]));
+            }
+        } else {
+            // with sort 1 field
+            // sort=[field, direction]
+            orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+        }
+        Sort _sort = Sort.by(orders);
+        return _sort;
+    }
+
+    private Direction getSortDirection(String direction) {
+        switch (direction) {
+            case "desc":
+                return Direction.DESC;
+            case "asc":
+            default:
+                return Direction.ASC;
+        }
+    }
 
     private ProductResponse fromEntity(Product product) {
         ProductResponse productResponse = new ProductResponse();
         BeanUtils.copyProperties(product, productResponse);
         return productResponse;
     }
-
 
 }

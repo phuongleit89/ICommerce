@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +28,16 @@ class ProductRepositoryTest {
         Product createdProduct = productRepository.save(product);
         assertThat(createdProduct).isNotNull();
         assertThat(createdProduct.getSku()).isEqualTo(sku);
+    }
+
+    @Test
+    public void save_WhenNameIsNull_ThenExceptionOccur() {
+        String sku = "002002";
+        Product product = Product.builder()
+                .sku(sku)
+                .price(12000d)
+                .quantity(100).build();
+        assertThrows(ConstraintViolationException.class, () -> productRepository.save(product));
     }
 
     @Test
