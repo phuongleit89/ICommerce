@@ -11,7 +11,6 @@ import com.ple.example.icommerce.service.ProductService;
 import com.ple.example.icommerce.spec.ProductSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -22,11 +21,15 @@ import java.util.Optional;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private PriceHistoryRepository priceHistoryRepository;
+    private final PriceHistoryRepository priceHistoryRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository,
+                              PriceHistoryRepository priceHistoryRepository) {
+        this.productRepository = productRepository;
+        this.priceHistoryRepository = priceHistoryRepository;
+    }
 
 
     @Override
@@ -50,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<Product> update(Long key, ProductRequest productRequest) {
         Optional<Product> productOpt = get(key);
-        if (!productOpt.isPresent()) {
+        if (productOpt.isEmpty()) {
             log.debug("Product is not found: #key: {}", key);
             return productOpt;
         }
@@ -74,11 +77,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> search(ProductFilter productFilter) {
-        Specification specs = Specification
-                .where(ProductSpecifications.skuLike(productFilter.getSku()))
-                .and(ProductSpecifications.nameLike(productFilter.getName()))
-                .and(ProductSpecifications.quantityInRange(productFilter.getMinQuantity(), productFilter.getMaxQuantity()))
-                .and(ProductSpecifications.priceInRange(productFilter.getMinPrice(), productFilter.getMaxPrice()));
+        Specification<Product> specs = Specification
+                .where(ProductSpecifications.skuLike(productFilter.getSku()));
+        specs.and(ProductSpecifications.nameLike(productFilter.getName()));
+        specs.and(ProductSpecifications.quantityInRange(productFilter.getMinQuantity(), productFilter.getMaxQuantity()));
+        specs.and(ProductSpecifications.priceInRange(productFilter.getMinPrice(), productFilter.getMaxPrice()));
 
         return productRepository.findAll(specs, productFilter.getPagingSort());
     }

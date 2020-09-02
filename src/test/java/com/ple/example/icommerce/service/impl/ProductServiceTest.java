@@ -242,7 +242,7 @@ class ProductServiceTest {
         Optional<Product> updatedProduct = productService.update(key, productRequest);
         assertThat(updatedProduct.isPresent()).isTrue();
         assertThat(updatedProduct.get().getKey()).isEqualTo(key);
-        verify(priceHistoryRepository, never()).save(any());
+        verify(productRepository, never()).findBySku(any());
         verify(productRepository).save(any());
         verify(priceHistoryRepository).save(any());
     }
