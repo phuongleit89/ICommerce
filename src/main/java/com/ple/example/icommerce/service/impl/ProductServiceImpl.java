@@ -1,8 +1,10 @@
 package com.ple.example.icommerce.service.impl;
 
+import com.ple.example.icommerce.dao.PriceHistoryRepository;
 import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.ProductFilter;
 import com.ple.example.icommerce.dto.ProductRequest;
+import com.ple.example.icommerce.entity.PriceHistory;
 import com.ple.example.icommerce.entity.Product;
 import com.ple.example.icommerce.exp.CommerceBadRequestException;
 import com.ple.example.icommerce.service.ProductService;
@@ -23,6 +25,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private PriceHistoryRepository priceHistoryRepository;
+
 
     @Override
     public Product create(ProductRequest productRequest) {
@@ -30,7 +35,11 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = new Product();
         BeanUtils.copyProperties(productRequest, product);
-        return productRepository.save(product);
+        product = productRepository.save(product);
+
+        keepTrackPriceChange(product);
+
+        return product;
     }
 
     @Override
@@ -51,8 +60,16 @@ public class ProductServiceImpl implements ProductService {
             validateSku(productRequest.getSku());
         }
 
+        boolean hasChangePrice = productRequest.getPrice().compareTo(product.getPrice()) != 0;
+
         BeanUtils.copyProperties(productRequest, product);
-        return Optional.of(productRepository.save(product));
+        product = productRepository.save(product);
+
+        if (hasChangePrice) {
+            keepTrackPriceChange(product);
+        }
+
+        return Optional.of(product);
     }
 
     @Override
@@ -64,6 +81,13 @@ public class ProductServiceImpl implements ProductService {
                 .and(ProductSpecifications.priceInRange(productFilter.getMinPrice(), productFilter.getMaxPrice()));
 
         return productRepository.findAll(specs, productFilter.getPagingSort());
+    }
+
+    private void keepTrackPriceChange(Product product) {
+        PriceHistory priceHistory = new PriceHistory();
+        priceHistory.setPrice(product.getPrice());
+        priceHistory.setProduct(product);
+        priceHistoryRepository.save(priceHistory);
     }
 
     private void validateSku(String sku) {

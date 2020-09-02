@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01" author="ple">
+        <createTable tableName="price_history"
+                     remarks="A table to keep track the product's price changing">
+            <column name="key" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="product_key" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="02" author="ple">
+        <addAutoIncrement tableName="price_history"
+                          columnDataType="bigint"
+                          columnName="key"/>
+    </changeSet>
+    <changeSet id="03" author="ple">
+        <addForeignKeyConstraint  baseColumnNames="product_key"
+                                  baseTableName="price_history"
+                                  constraintName="fk_price_history_product"
+                                  onDelete="CASCADE"
+                                  onUpdate="NO ACTION"
+                                  referencedColumnNames="key"
+                                  referencedTableName="product"/>
+    </changeSet>
+
+</databaseChangeLog>
