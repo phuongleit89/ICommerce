@@ -9,6 +9,7 @@ public class CommerceBadRequestException extends RuntimeException {
     public final static String PRODUCT_SKU_IS_EXISTING = "E001";
     public final static String CART_ITEMS_EMPTY = "E002";
     public final static String NOT_ALLOW_UPDATE_ORDER_STATUS = "EOO3";
+    public final static String PRODUCT_QUANTITY_OUT_OF_STOCK = "EOO4";
 
     public CommerceBadRequestException() {
         super();

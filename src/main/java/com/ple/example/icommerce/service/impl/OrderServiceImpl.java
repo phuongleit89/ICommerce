@@ -2,6 +2,7 @@ package com.ple.example.icommerce.service.impl;
 
 import com.ple.example.icommerce.dao.CartRepository;
 import com.ple.example.icommerce.dao.OrderRepository;
+import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.OrderRequest;
 import com.ple.example.icommerce.dto.OrderStatusRequest;
 import com.ple.example.icommerce.entity.*;
@@ -11,6 +12,9 @@ import com.ple.example.icommerce.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -23,14 +27,18 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
+    private final ProductRepository productRepository;
 
     public OrderServiceImpl(OrderRepository orderRepository,
-                            CartRepository cartRepository) {
+                            CartRepository cartRepository,
+                            ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public Order createOrder(Long cartKey, OrderRequest orderRequest) {
         Cart cart = cartRepository.findById(cartKey).orElseThrow(NotFoundException::new);
         Set<CartItem> cartItems = cart.getCartItems();
@@ -47,22 +55,34 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(new BigDecimal(0));
 
         cartItems.forEach(cartItem -> {
+            Integer quantity = cartItem.getQuantity();
+            Product product = cartItem.getProduct();
+            if (!checkStock(quantity, product)) {
+                throw new CommerceBadRequestException(CommerceBadRequestException.PRODUCT_QUANTITY_OUT_OF_STOCK);
+            }
+
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            Product product = cartItem.getProduct();
+
             orderItem.setProduct(product);
             Double price = product.getPrice();
             orderItem.setPrice(price);
-            Integer quantity = cartItem.getQuantity();
+
             orderItem.setQuantity(quantity);
             orderItems.add(orderItem);
             order.setTotalPrice(order.getTotalPrice().add(BigDecimal.valueOf(price * quantity)));
+
+            updateProductStock(quantity, product);
         });
 
-        return orderRepository.save(order);
+        Order createdOrder = orderRepository.save(order);
+        cartRepository.delete(cart);
+
+        return createdOrder;
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public Order updateOrderStatus(Long orderKey, OrderStatusRequest statusRequest) {
         Order order = orderRepository.findById(orderKey).orElseThrow(NotFoundException::new);
         OrderStatus status = order.getStatus();
@@ -74,13 +94,23 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, readOnly = true)
+    public Order get(Long orderKey) {
+        return orderRepository.findById(orderKey).orElseThrow(NotFoundException::new);
+    }
+
     private boolean isAllowUpdateStatus(OrderStatus status) {
         return status != OrderStatus.CANCELED && status != OrderStatus.FINISHED;
     }
 
-    @Override
-    public Order get(Long orderKey) {
-        return orderRepository.findById(orderKey).orElseThrow(NotFoundException::new);
+    private void updateProductStock(Integer quantity, Product product) {
+        product.setQuantity(product.getQuantity() - quantity);
+        productRepository.save(product);
+    }
+
+    private boolean checkStock(Integer quantity, Product product) {
+        return quantity <= product.getQuantity();
     }
 
 }
