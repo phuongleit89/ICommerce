@@ -1,6 +1,9 @@
 package com.ple.example.icommerce.controller;
 
 
+import com.ple.example.icommerce.entity.AuditActionType;
+import com.ple.example.icommerce.annotation.AuditField;
+import com.ple.example.icommerce.annotation.Auditable;
 import com.ple.example.icommerce.dto.ProductFilter;
 import com.ple.example.icommerce.dto.ProductPageResults;
 import com.ple.example.icommerce.dto.ProductRequest;
@@ -53,7 +56,10 @@ public class ProductController {
     }
 
     @GetMapping("/{key}")
-    public ResponseEntity<ProductResponse> get(@NotNull @Min(value = 0) @PathVariable("key") Long key) {
+    @Auditable(action = AuditActionType.VIEW_DETAIL)
+    public ResponseEntity<ProductResponse> get(@NotNull @Min(value = 0)
+                                               @PathVariable("key")
+                                               @AuditField(name = "key") Long key) {
         log.trace("Get detail product: #key: {}", key);
         Optional<Product> product = productService.get(key);
         if (product.isPresent()) {
@@ -74,13 +80,14 @@ public class ProductController {
     }
 
     @GetMapping("/search")
+    @Auditable(action = AuditActionType.SEARCH)
     public ResponseEntity<ProductPageResults> search(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String sku,
-            @RequestParam(defaultValue = "0") double minPrice,
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(defaultValue = "0") int minQuantity,
-            @RequestParam(required = false) Integer maxQuantity,
+            @RequestParam(required = false) @AuditField(name = "name") String name,
+            @RequestParam(required = false) @AuditField(name = "sku") String sku,
+            @RequestParam(defaultValue = "0") @AuditField(name = "minPrice") double minPrice,
+            @RequestParam(required = false) @AuditField(name = "maxPrice") Double maxPrice,
+            @RequestParam(defaultValue = "0") @AuditField(name = "minQuantity") int minQuantity,
+            @RequestParam(required = false) @AuditField(name = "maxQuantity") Integer maxQuantity,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "key,desc") String[] sort) {

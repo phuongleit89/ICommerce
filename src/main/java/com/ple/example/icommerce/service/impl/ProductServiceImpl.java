@@ -14,6 +14,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -33,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public Product create(ProductRequest productRequest) {
         validateSku(productRequest.getSku());
 
@@ -46,11 +50,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, readOnly = true)
     public Optional<Product> get(Long key) {
         return productRepository.findById(key);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public Optional<Product> update(Long key, ProductRequest productRequest) {
         Optional<Product> productOpt = get(key);
         if (productOpt.isEmpty()) {
@@ -76,6 +82,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, readOnly = true)
     public Page<Product> search(ProductFilter productFilter) {
         Specification<Product> specs = Specification
                 .where(ProductSpecifications.skuLike(productFilter.getSku()));
