@@ -15,7 +15,7 @@
             <column name="action_type" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="input_description" type="varchar(1)">
+            <column name="input_description" type="varchar(1024)">
             </column>
             <column name="created_at" type="datetime(6)">
                 <constraints nullable="false"/>

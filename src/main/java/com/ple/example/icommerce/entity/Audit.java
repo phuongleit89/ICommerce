@@ -26,7 +26,7 @@ public class Audit extends AuditModel {
     private AuditActionType actionType;
 
     @Column(name = "input_description")
-    @Size(max = 1)
+    @Size(max = 1024)
     private String inputDescription;
 
 }

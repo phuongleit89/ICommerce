@@ -8,8 +8,10 @@ import com.ple.example.icommerce.service.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
@@ -66,6 +68,16 @@ public class AuditAspect {
                 .actionType(actionType)
                 .inputDescription(description).build();
         auditService.create(audit);
+    }
+
+    @Around("execution(* com.ple.example.icommerce.service.AuditService.create(..))")
+    public void auditAround(final ProceedingJoinPoint joinPoint) {
+        log.debug("Before invoking audit create() method");
+        try {
+            joinPoint.proceed();
+        } catch (Throwable ex) {
+            log.error("Audit Information Failed", ex);
+        }
     }
 
 }

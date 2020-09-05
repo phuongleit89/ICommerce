@@ -3,12 +3,11 @@ package com.ple.example.icommerce.service.impl;
 import com.ple.example.icommerce.dao.AuditRepository;
 import com.ple.example.icommerce.entity.Audit;
 import com.ple.example.icommerce.service.AuditService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 public class AuditServiceImpl implements AuditService {
 
     private final AuditRepository auditRepository;
@@ -18,11 +17,8 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    @Transactional(
-            propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.SERIALIZABLE,
-            rollbackFor = Exception.class)
     public Audit create(Audit audit) {
+        log.debug("Create audit ...");
         return auditRepository.save(audit);
     }
 
