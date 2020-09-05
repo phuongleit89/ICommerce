@@ -11,6 +11,7 @@ import com.ple.example.icommerce.service.CartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,7 +44,7 @@ public class CartServiceImpl implements CartService {
         Long productKey = cartItemRequest.getProductKey();
         Integer quantity = cartItemRequest.getQuantity();
 
-        Set<CartItem> cartItems = cart.getCartItems();
+        Set<CartItem> cartItems = Optional.ofNullable(cart.getCartItems()).orElse(new HashSet<>());
         Optional<CartItem> foundItem = cartItems.stream()
                 .filter(cartItem -> cartItem.getProduct().getKey().compareTo(productKey) == 0).findFirst();
         if (foundItem.isPresent()) {
@@ -66,7 +67,7 @@ public class CartServiceImpl implements CartService {
     public Cart updateProductQuantity(Long cartKey, Long productKey, int quantity) {
         Cart cart = cartRepository.findById(cartKey).orElseThrow(NotFoundException::new);
 
-        Set<CartItem> cartItems = cart.getCartItems();
+        Set<CartItem> cartItems = Optional.ofNullable(cart.getCartItems()).orElse(new HashSet<>());
         Optional<CartItem> foundItem = cartItems.stream()
                 .filter(cartItem -> cartItem.getProduct().getKey().compareTo(productKey) == 0).findFirst();
         if (foundItem.isPresent()) {
@@ -82,7 +83,7 @@ public class CartServiceImpl implements CartService {
     public Cart removeProduct(Long cartKey, Long productKey) {
         Cart cart = cartRepository.findById(cartKey).orElseThrow(NotFoundException::new);
 
-        Set<CartItem> cartItems = cart.getCartItems();
+        Set<CartItem> cartItems = Optional.ofNullable(cart.getCartItems()).orElse(new HashSet<>());
         Optional<CartItem> foundItem = cartItems.stream()
                 .filter(cartItem -> cartItem.getProduct().getKey().compareTo(productKey) == 0).findFirst();
         if (foundItem.isPresent()) {
