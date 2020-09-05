@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01" author="ple">
+        <createTable tableName="cart"
+                     remarks="A table to contain all shopping cart information">
+            <column name="key" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="created_at" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="02" author="ple">
+        <addAutoIncrement tableName="cart"
+                          columnDataType="bigint"
+                          columnName="key"/>
+    </changeSet>
+    <changeSet id="03" author="ple">
+        <createTable tableName="cart_item"
+                     remarks="A table to contain all cart item detail">
+            <column name="key" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="cart_key" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_key" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="04" author="ple">
+        <addAutoIncrement tableName="cart_item"
+                          columnDataType="bigint"
+                          columnName="key"/>
+    </changeSet>
+    <changeSet id="05" author="ple">
+        <addForeignKeyConstraint  baseColumnNames="cart_key"
+                                  baseTableName="cart_item"
+                                  constraintName="fk_card_item_cart"
+                                  onDelete="CASCADE"
+                                  onUpdate="NO ACTION"
+                                  referencedColumnNames="key"
+                                  referencedTableName="cart"/>
+    </changeSet>
+    <changeSet id="06" author="ple">
+        <addForeignKeyConstraint  baseColumnNames="product_key"
+                                  baseTableName="cart_item"
+                                  constraintName="fk_card_item_product"
+                                  onDelete="CASCADE"
+                                  onUpdate="NO ACTION"
+                                  referencedColumnNames="key"
+                                  referencedTableName="product"/>
+    </changeSet>
+
+</databaseChangeLog>

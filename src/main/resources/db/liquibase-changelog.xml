@@ -8,4 +8,5 @@
     <include file="changelog/02-create-price-history-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/03-update-product-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/04-create-audit-schema.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/05-create-shopping-cart-schema.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

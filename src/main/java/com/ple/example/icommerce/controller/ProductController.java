@@ -1,17 +1,17 @@
 package com.ple.example.icommerce.controller;
 
 
-import com.ple.example.icommerce.entity.AuditActionType;
 import com.ple.example.icommerce.annotation.AuditField;
 import com.ple.example.icommerce.annotation.Auditable;
 import com.ple.example.icommerce.dto.ProductFilter;
 import com.ple.example.icommerce.dto.ProductPageResults;
 import com.ple.example.icommerce.dto.ProductRequest;
 import com.ple.example.icommerce.dto.ProductResponse;
+import com.ple.example.icommerce.entity.AuditActionType;
 import com.ple.example.icommerce.entity.Product;
 import com.ple.example.icommerce.service.ProductService;
+import com.ple.example.icommerce.utils.ModelUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +52,7 @@ public class ProductController {
         if (createdProduct == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(fromEntity(createdProduct));
+        return ResponseEntity.ok(ModelUtils.toProductResponse(createdProduct));
     }
 
     @GetMapping("/{key}")
@@ -63,7 +63,7 @@ public class ProductController {
         log.trace("Get detail product: #key: {}", key);
         Optional<Product> product = productService.get(key);
         if (product.isPresent()) {
-            return ResponseEntity.ok(fromEntity(product.get()));
+            return ResponseEntity.ok(ModelUtils.toProductResponse(product.get()));
         }
         return ResponseEntity.notFound().build();
     }
@@ -74,7 +74,7 @@ public class ProductController {
         log.trace("Update the existing product: #key: {}, #product: {}", key, productRequest);
         Optional<Product> product = productService.update(key, productRequest);
         if (product.isPresent()) {
-            return ResponseEntity.ok(fromEntity(product.get()));
+            return ResponseEntity.ok(ModelUtils.toProductResponse(product.get()));
         }
         return ResponseEntity.notFound().build();
     }
@@ -111,7 +111,7 @@ public class ProductController {
         }
 
         List<ProductResponse> productResponses = products.stream()
-                .map(product -> fromEntity(product)).collect(Collectors.toList());
+                .map(product -> ModelUtils.toProductResponse(product)).collect(Collectors.toList());
         ProductPageResults pageResults = ProductPageResults.builder()
                 .products(productResponses)
                 .currentPage(productPage.getNumber())
@@ -149,12 +149,6 @@ public class ProductController {
             default:
                 return Direction.ASC;
         }
-    }
-
-    private ProductResponse fromEntity(Product product) {
-        ProductResponse productResponse = new ProductResponse();
-        BeanUtils.copyProperties(product, productResponse);
-        return productResponse;
     }
 
 }
