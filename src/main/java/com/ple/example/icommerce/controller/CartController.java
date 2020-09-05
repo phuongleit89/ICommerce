@@ -31,25 +31,25 @@ public class CartController {
         return response(cartService.create());
     }
 
-    @PostMapping("/{key}")
+    @PutMapping("/{key}")
     public ResponseEntity<CartResponse> addProduct(@NotNull @Min(value = 1) @PathVariable("key") Long cartKey,
                                                    @Valid @RequestBody CartItemRequest cartItem){
         return response(cartService.addProduct(cartKey, cartItem));
     }
 
-    @PostMapping("{key}/quantity")
+    @PutMapping("/{key}/quantity")
     public ResponseEntity<CartResponse> updateProductQuantity(@NotNull @Min(value = 1) @PathVariable("key") Long cartKey,
                                                               @Valid @RequestBody CartItemRequest cartItem){
         return response(cartService.updateProductQuantity(cartKey, cartItem.getProductKey(), cartItem.getQuantity()));
     }
 
-    @DeleteMapping("{key}/{product_key}")
+    @DeleteMapping("/{key}/{product_key}")
     public ResponseEntity<CartResponse> removeItem(@NotNull @Min(value = 1) @PathVariable("key") Long cartKey,
                                                    @NotNull @Min(value = 1) @PathVariable("product_key") Long productKey){
         return response(cartService.removeProduct(cartKey, productKey));
     }
 
-    @GetMapping("{key}")
+    @GetMapping("/{key}")
     public ResponseEntity<CartResponse> get(@NotNull @Min(value = 1) @PathVariable("key") Long cartKey){
         return response(cartService.get(cartKey));
     }

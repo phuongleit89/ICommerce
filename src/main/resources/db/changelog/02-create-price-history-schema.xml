@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01" author="ple">
-        <createTable tableName="price_history"
+        <createTable tableName="price_history_table"
                      remarks="A table to keep track the product's price changing">
             <column name="key" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
@@ -24,18 +24,18 @@
         </createTable>
     </changeSet>
     <changeSet id="02" author="ple">
-        <addAutoIncrement tableName="price_history"
+        <addAutoIncrement tableName="price_history_table"
                           columnDataType="bigint"
                           columnName="key"/>
     </changeSet>
     <changeSet id="03" author="ple">
         <addForeignKeyConstraint  baseColumnNames="product_key"
-                                  baseTableName="price_history"
+                                  baseTableName="price_history_table"
                                   constraintName="fk_price_history_product"
                                   onDelete="CASCADE"
                                   onUpdate="NO ACTION"
                                   referencedColumnNames="key"
-                                  referencedTableName="product"/>
+                                  referencedTableName="product_table"/>
     </changeSet>
 
 </databaseChangeLog>

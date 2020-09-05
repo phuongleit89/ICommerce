@@ -22,7 +22,9 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
 
-    public CartServiceImpl(CartRepository cartRepository, CartItemRepository cartItemRepository, ProductRepository productRepository) {
+    public CartServiceImpl(CartRepository cartRepository,
+                           CartItemRepository cartItemRepository,
+                           ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
@@ -95,6 +97,5 @@ public class CartServiceImpl implements CartService {
     public Cart get(Long cartKey) {
         return cartRepository.findById(cartKey).orElseThrow(NotFoundException::new);
     }
-
 
 }

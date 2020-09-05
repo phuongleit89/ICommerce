@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01" author="ple">
-        <createTable tableName="audit"
+        <createTable tableName="audit_table"
                      remarks="A table to contain all audit information">
             <column name="key" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
@@ -23,7 +23,7 @@
         </createTable>
     </changeSet>
     <changeSet id="02" author="ple">
-        <addAutoIncrement tableName="audit"
+        <addAutoIncrement tableName="audit_table"
                           columnDataType="bigint"
                           columnName="key"/>
     </changeSet>

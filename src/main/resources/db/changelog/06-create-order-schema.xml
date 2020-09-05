@@ -7,10 +7,29 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01" author="ple">
-        <createTable tableName="cart_table"
-                     remarks="A table to contain all shopping cart information">
+        <createTable tableName="order_table"
+                     remarks="A table to contain all order information">
             <column name="key" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zip" type="varchar(255)">
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="varchar(1024)">
+            </column>
+            <column name="total_price" type="decimal">
+                <constraints nullable="false"/>
             </column>
             <column name="created_at" type="datetime(6)">
                 <constraints nullable="false"/>
@@ -18,17 +37,17 @@
         </createTable>
     </changeSet>
     <changeSet id="02" author="ple">
-        <addAutoIncrement tableName="cart_table"
+        <addAutoIncrement tableName="order_table"
                           columnDataType="bigint"
                           columnName="key"/>
     </changeSet>
     <changeSet id="03" author="ple">
-        <createTable tableName="cart_item_table"
-                     remarks="A table to contain all cart item detail">
+        <createTable tableName="order_item_table"
+                     remarks="A table to contain all order item detail">
             <column name="key" type="bigint">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="cart_key" type="bigint">
+            <column name="order_key" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="product_key" type="bigint">
@@ -37,26 +56,29 @@
             <column name="quantity" type="int">
                 <constraints nullable="false"/>
             </column>
+            <column name="price" type="double">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="04" author="ple">
-        <addAutoIncrement tableName="cart_item_table"
+        <addAutoIncrement tableName="order_item_table"
                           columnDataType="bigint"
                           columnName="key"/>
     </changeSet>
     <changeSet id="05" author="ple">
-        <addForeignKeyConstraint  baseColumnNames="cart_key"
-                                  baseTableName="cart_item_table"
-                                  constraintName="fk_card_item_cart"
+        <addForeignKeyConstraint  baseColumnNames="order_key"
+                                  baseTableName="order_item_table"
+                                  constraintName="fk_order_item_order"
                                   onDelete="CASCADE"
                                   onUpdate="NO ACTION"
                                   referencedColumnNames="key"
-                                  referencedTableName="cart_table"/>
+                                  referencedTableName="order_table"/>
     </changeSet>
     <changeSet id="06" author="ple">
         <addForeignKeyConstraint  baseColumnNames="product_key"
-                                  baseTableName="cart_item_table"
-                                  constraintName="fk_card_item_product"
+                                  baseTableName="order_item_table"
+                                  constraintName="fk_order_item_product"
                                   onDelete="CASCADE"
                                   onUpdate="NO ACTION"
                                   referencedColumnNames="key"

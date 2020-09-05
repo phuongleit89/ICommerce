@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class CommerceBadRequestException extends RuntimeException {
 
-    public final static String PRODUCT_SKU_IS_EXISTING = "Product SKU is existing";
+    public final static String PRODUCT_SKU_IS_EXISTING = "E001";
+    public final static String CART_ITEMS_EMPTY = "E002";
+    public final static String NOT_ALLOW_UPDATE_ORDER_STATUS = "EOO3";
 
     public CommerceBadRequestException() {
         super();

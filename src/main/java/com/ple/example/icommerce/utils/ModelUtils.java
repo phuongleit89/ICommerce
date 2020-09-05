@@ -1,11 +1,7 @@
 package com.ple.example.icommerce.utils;
 
-import com.ple.example.icommerce.dto.CartItemResponse;
-import com.ple.example.icommerce.dto.CartResponse;
-import com.ple.example.icommerce.dto.ProductResponse;
-import com.ple.example.icommerce.entity.Cart;
-import com.ple.example.icommerce.entity.CartItem;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.dto.*;
+import com.ple.example.icommerce.entity.*;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Optional;
@@ -34,6 +30,23 @@ public class ModelUtils {
             cartResponse.setCartItems(cartItems.stream().map(ModelUtils::toCardItemResponse).collect(Collectors.toSet()));
         });
         return cartResponse;
+    }
+
+    public static final OrderItemResponse toOrderItemResponse (OrderItem orderItem) {
+        OrderItemResponse orderItemResponse = new OrderItemResponse();
+        BeanUtils.copyProperties(orderItem, orderItemResponse);
+        orderItemResponse.setProduct(toProductResponse(orderItem.getProduct()));
+        return orderItemResponse;
+    }
+
+    public static final OrderResponse toOrderResponse(Order order) {
+        OrderResponse orderResponse = new OrderResponse();
+        BeanUtils.copyProperties(order, orderResponse);
+
+        Optional.ofNullable(order.getOrderItems()).ifPresent(orderItems -> {
+            orderResponse.setOrderItems(orderItems.stream().map(ModelUtils::toOrderItemResponse).collect(Collectors.toSet()));
+        });
+        return orderResponse;
     }
 
 }

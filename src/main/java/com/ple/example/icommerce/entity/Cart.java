@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "cart_table")
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Cart extends AuditModel {

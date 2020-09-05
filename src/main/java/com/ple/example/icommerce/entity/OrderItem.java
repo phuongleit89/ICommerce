@@ -9,9 +9,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "cart_item_table")
+@Table(name = "order_item_table")
 @Data
-public class CartItem {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,8 @@ public class CartItem {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_key", nullable = false)
-    private Cart cart;
+    @JoinColumn(name = "order_key", nullable = false)
+    private Order order;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(optional = false)
@@ -33,5 +33,10 @@ public class CartItem {
     @NotNull
     @Min(value = 1)
     private Integer quantity;
+
+    @Column(name = "price")
+    @NotNull
+    @Min(value = 0)
+    private Double price;
 
 }
