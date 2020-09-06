@@ -31,7 +31,7 @@ public class ProductIntegrationTest {
 
 
     @Test
-    public void createProduct_IsValidData_ThenSuccess() throws Exception {
+    public void createProduct_When_IsValidData_Expect_Success() throws Exception {
         String sku = "001002";
         ProductRequest productRequest = ProductRequest.builder()
                 .name("name 01")
@@ -44,7 +44,7 @@ public class ProductIntegrationTest {
     }
 
     @Test
-    public void createProduct_IsInvalidData_ThenFail() throws Exception {
+    public void createProduct_When_IsInvalidData_Expect_Fail() throws Exception {
         ProductRequest productRequest = ProductRequest.builder()
                 .name("name 01")
                 .sku("001002")
@@ -58,7 +58,7 @@ public class ProductIntegrationTest {
     }
 
     @Test
-    public void updateProduct_IsValidData_ThenSuccess() throws Exception {
+    public void updateProduct_When_IsValidData_Expect_Success() throws Exception {
         String sku = "001003";
         ProductRequest productRequest = ProductRequest.builder()
                 .name("name 01")
@@ -85,7 +85,7 @@ public class ProductIntegrationTest {
     }
 
     @Test
-    public void updateProduct_IsInvalidData_ThenFail() throws Exception {
+    public void updateProduct_When_IsInvalidData_Expect_Fail() throws Exception {
         String sku = "001004";
         ProductRequest productRequest = ProductRequest.builder()
                 .name("name 03")

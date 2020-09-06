@@ -28,7 +28,7 @@ public class ProductControllerTest {
     ProductServiceImpl productService;
 
     @Test
-    public void getProduct_IsExisted_Success() throws Exception {
+    public void getProduct_When_IsExisted_Expect_Success() throws Exception {
         long key = 1;
         Product product = Product.builder()
                 .key(key).build();
@@ -42,7 +42,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void getProduct_IsNotFound_Fail() throws Exception {
+    public void getProduct_When_IsNotFound_Expect_Fail() throws Exception {
         long key = 1;
         when(productService.get(eq(key)))
                 .thenReturn(Optional.empty());

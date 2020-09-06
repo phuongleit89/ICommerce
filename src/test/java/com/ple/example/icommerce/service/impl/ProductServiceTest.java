@@ -34,7 +34,7 @@ class ProductServiceTest {
 
 
     @Test
-    void create_WhenDataIsValid_ThenSuccess() {
+    void createProduct_When_DataIsValid_Expect_Success() {
         // given
         Long key = 1L;
         double price = 12000d;
@@ -66,7 +66,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void create_WhenSkuIsDuplicate_ThenExceptionOccur() {
+    void createProduct_When_SkuIsDuplicate_Expect_ExceptionOccur() {
         // given
         Long key = 1L;
         String sku = "001001";
@@ -91,7 +91,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void getByKey_WhenKeyExisted_ThenSuccess() {
+    void getProductByKey_When_KeyExisted_Expect_Success() {
         // given
         Long key = 1L;
         Product productMock = Product.builder()
@@ -110,7 +110,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void getByKey_WhenKeyNotFound_ThenReturnEmpty() {
+    void getProductByKey_When_KeyNotFound_Expect_ReturnEmpty() {
         // given
         Long key = 1L;
         // when
@@ -122,7 +122,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void update_WhenSkuChangeAndValid_ThenSuccess() {
+    void updateProduct_When_SkuChangeAndValid_Expect_Success() {
         // given
         Long key = 1L;
         String sku = "001001";
@@ -152,7 +152,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void update_WhenSkuChangeAndDuplicate_ThenExceptionOccur() {
+    void updateProduct_When_SkuChangeAndDuplicate_Expect_ExceptionOccur() {
         // given
         Long key = 1L;
         String sku = "001001";
@@ -184,7 +184,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void update_WhenSkuDoNotChange_ThenSuccess() {
+    void updateProduct_When_SkuDoNotChange_Expect_Success() {
         // given
         Long key = 1L;
         String sku = "001001";
@@ -212,7 +212,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void update_WhenPriceChange_ThenSuccess() {
+    void updateProduct_When_PriceChange_Expect_Success() {
         // given
         Long key = 1L;
         String sku = "001001";

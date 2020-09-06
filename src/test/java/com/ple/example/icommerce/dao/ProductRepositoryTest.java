@@ -1,9 +1,11 @@
 package com.ple.example.icommerce.dao;
 
+import com.ple.example.icommerce.config.JpaConfig;
 import com.ple.example.icommerce.entity.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Optional;
@@ -12,13 +14,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@Import(JpaConfig.class)
 class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
 
     @Test
-    public void save_WhenValidData_ThenSuccess() {
+    public void saveProduct_When_ValidData_Expect_Success() {
         String sku = "001002";
         Product product = Product.builder()
                 .name("name 01")
@@ -31,7 +34,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    public void save_WhenNameIsNull_ThenExceptionOccur() {
+    public void saveProduct_When_NameIsNull_Expect_ExceptionOccur() {
         String sku = "002002";
         Product product = Product.builder()
                 .sku(sku)
@@ -41,7 +44,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    public void save_WhenSkuIsDuplicated_ThenExceptionOccur() {
+    public void saveProduct_When_SkuIsDuplicated_Expect_ExceptionOccur() {
         String sku = "001003";
         Product product = Product.builder()
                 .name("name 01")
@@ -61,13 +64,13 @@ class ProductRepositoryTest {
     }
 
     @Test
-    public void findById_WhenKeyNotFound_ThenSuccess() {
+    public void findProductByKey_When_KeyNotFound_Expect_Success() {
         Optional<Product> product = productRepository.findById(0L);
         assertFalse(product.isPresent());
     }
 
     @Test
-    public void findById_WhenKeyIsExisted_ThenSuccess() {
+    public void findProductByKey_When_KeyIsExisted_Expect_Success() {
         String sku = "001004";
         Product product = Product.builder()
                 .name("name 01")
@@ -84,13 +87,13 @@ class ProductRepositoryTest {
     }
 
     @Test
-    public void findBySku_WhenSkuNotFound_ThenSuccess() {
+    public void findProductBySku_When_SkuNotFound_Expect_Success() {
         Product product = productRepository.findBySku("000000");
         assertThat(product).isNull();
     }
 
     @Test
-    public void findBySku_WhenSkuIsExisted_ThenSuccess() {
+    public void findProductBySku_When_SkuIsExisted_Expect_Success() {
         String sku = "001005";
         Product product = Product.builder()
                 .name("name 01")
