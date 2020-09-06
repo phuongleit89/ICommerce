@@ -1,4 +1,4 @@
-package com.ple.example.icommerce.controller;
+package com.ple.example.icommerce;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ple.example.icommerce.dao.ProductRepository;
