@@ -17,10 +17,10 @@ import javax.validation.ConstraintViolationException;
 public class ApiExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException exception) {
         log.debug("Handle MethodArgumentNotValidException ...");
         ErrorResponse errors = new ErrorResponse();
-        e.getBindingResult().getAllErrors().forEach((error) -> {
+        exception.getBindingResult().getAllErrors().forEach((error) -> {
             ErrorItem errorItem = new ErrorItem();
             errorItem.setCode(((FieldError) error).getField());
             errorItem.setMessage(error.getDefaultMessage());
@@ -30,10 +30,10 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handle(ConstraintViolationException e) {
+    public ResponseEntity<ErrorResponse> handle(ConstraintViolationException exception) {
         log.debug("Handle ConstraintViolationException ...");
         ErrorResponse errors = new ErrorResponse();
-        e.getConstraintViolations().forEach(violation -> {
+        exception.getConstraintViolations().forEach(violation -> {
             ErrorItem error = new ErrorItem();
             error.setCode(violation.getMessageTemplate());
             error.setMessage(violation.getMessage());

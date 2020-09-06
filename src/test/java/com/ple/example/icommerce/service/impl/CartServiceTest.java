@@ -21,7 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class CartServiceTest {
@@ -40,7 +42,7 @@ public class CartServiceTest {
 
 
     @Test
-    public void createCart_When_StoreSuccess_Expect_Success () {
+    public void createCart_When_StoreSuccess_Expect_Success() {
         // given
         Cart cartMock = new Cart();
 
@@ -54,7 +56,7 @@ public class CartServiceTest {
     }
 
     @Test
-    public void addProductToCart_When_CartNotFound_Expect_ExceptionOccur () {
+    public void addProductToCart_When_CartNotFound_Expect_ExceptionOccur() {
         // given
         Long cardKey = 1L;
         CartItemRequest cartItemRequest = new CartItemRequest();
@@ -69,7 +71,7 @@ public class CartServiceTest {
     }
 
     @Test
-    public void addProductToCart_When_CartItemNotFound_Expect_Success () {
+    public void addProductToCart_When_CartItemNotFound_Expect_Success() {
         // given
         Long cardKey = 1L;
         Long productKey = 1L;
@@ -96,7 +98,7 @@ public class CartServiceTest {
     }
 
     @Test
-    public void addProductToCart_When_CartItemFound_Expect_Success () {
+    public void addProductToCart_When_CartItemFound_Expect_Success() {
         // given
         Long cardKey = 1L;
         Long productKey = 1L;

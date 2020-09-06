@@ -5,7 +5,11 @@ import com.ple.example.icommerce.dao.OrderRepository;
 import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.OrderRequest;
 import com.ple.example.icommerce.dto.OrderStatusRequest;
-import com.ple.example.icommerce.entity.*;
+import com.ple.example.icommerce.entity.Cart;
+import com.ple.example.icommerce.entity.CartItem;
+import com.ple.example.icommerce.entity.Order;
+import com.ple.example.icommerce.entity.OrderStatus;
+import com.ple.example.icommerce.entity.Product;
 import com.ple.example.icommerce.exp.CommerceBadRequestException;
 import com.ple.example.icommerce.exp.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,30 +26,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class OrderServiceTest {
 
+    private final long cartKey = 1;
+    private final long productKey = 1;
+    private final long orderKey = 1;
+    private final Set<CartItem> cartItemsMock = new HashSet<>();
     @Autowired
     private OrderServiceImpl orderService;
-
     @MockBean
     private CartRepository cartRepository;
-
     @MockBean
     private OrderRepository orderRepository;
-
     @MockBean
     private ProductRepository productRepository;
-
-    private long cartKey = 1;
-    private long productKey = 1;
-    private long orderKey = 1;
     private Product productMock;
     private Cart cartMock;
     private CartItem cartItemMock;
-    private Set<CartItem> cartItemsMock = new HashSet<>();
     private Order orderMock;
 
     @BeforeEach

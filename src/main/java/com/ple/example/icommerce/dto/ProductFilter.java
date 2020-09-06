@@ -8,12 +8,12 @@ import org.springframework.data.domain.Pageable;
 @Builder
 public class ProductFilter {
 
+    Pageable pagingSort;
     private String name;
     private String sku;
     private double minPrice;
     private Double maxPrice;
     private int minQuantity;
     private Integer maxQuantity;
-    Pageable pagingSort;
 
 }

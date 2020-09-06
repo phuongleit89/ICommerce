@@ -1,8 +1,16 @@
+buildscript {
+    ext {
+        rootGradleDir = "${rootProject.rootDir}/gradle"
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
 }
+
+apply from: "${rootGradleDir}/staticCodeAnalysis.gradle"
 
 group = 'com.ple.example'
 version = '0.0.1-SNAPSHOT'

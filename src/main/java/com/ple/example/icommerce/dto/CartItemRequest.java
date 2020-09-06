@@ -15,14 +15,14 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class CartItemRequest {
 
-    @JsonProperty(value = "productKey")
+    @JsonProperty("productKey")
     @NotNull
-    @Min(value = 1)
+    @Min(1)
     private Long productKey;
 
-    @JsonProperty(value = "quantity")
+    @JsonProperty("quantity")
     @NotNull
-    @Min(value = 1)
+    @Min(1)
     private Integer quantity;
 
 }

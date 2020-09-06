@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class ErrorResponse {
 
-    @JsonProperty(value = "errors")
+    @JsonProperty("errors")
     private List<ErrorItem> errors = new ArrayList<>();
 
     public void addError(ErrorItem error) {

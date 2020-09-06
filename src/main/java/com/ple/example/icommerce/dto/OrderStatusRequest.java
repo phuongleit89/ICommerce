@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class OrderStatusRequest {
 
-    @JsonProperty(value = "status")
+    @JsonProperty("status")
     @NotNull
     private OrderStatus status;
 

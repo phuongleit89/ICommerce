@@ -5,7 +5,12 @@ import com.ple.example.icommerce.dao.OrderRepository;
 import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.OrderRequest;
 import com.ple.example.icommerce.dto.OrderStatusRequest;
-import com.ple.example.icommerce.entity.*;
+import com.ple.example.icommerce.entity.Cart;
+import com.ple.example.icommerce.entity.CartItem;
+import com.ple.example.icommerce.entity.Order;
+import com.ple.example.icommerce.entity.OrderItem;
+import com.ple.example.icommerce.entity.OrderStatus;
+import com.ple.example.icommerce.entity.Product;
 import com.ple.example.icommerce.exp.CommerceBadRequestException;
 import com.ple.example.icommerce.exp.NotFoundException;
 import com.ple.example.icommerce.service.OrderService;
@@ -52,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.INITIATE);
         Set<OrderItem> orderItems = new HashSet<>();
         order.setOrderItems(orderItems);
-        order.setTotalPrice(new BigDecimal(0));
+        order.setTotalPrice(BigDecimal.ZERO);
 
         cartItems.forEach(cartItem -> {
             Integer quantity = cartItem.getQuantity();

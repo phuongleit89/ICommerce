@@ -9,14 +9,20 @@ import com.ple.example.icommerce.utils.ModelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @RestController
-@RequestMapping(value = "/order")
+@RequestMapping("/order")
 @Validated
 @Slf4j
 public class OrderController {
@@ -28,21 +34,21 @@ public class OrderController {
     }
 
     @PostMapping("/create/{card_key}")
-    public ResponseEntity<OrderResponse> createOrder(@NotNull @Min(value = 1) @PathVariable("card_key") Long cartKey,
-                                                     @RequestBody @Valid @NotNull OrderRequest order){
+    public ResponseEntity<OrderResponse> createOrder(@NotNull @Min(1) @PathVariable("card_key") Long cartKey,
+                                                     @RequestBody @Valid @NotNull OrderRequest order) {
         Order orderResponse = orderService.createOrder(cartKey, order);
         return response(orderResponse);
     }
 
     @PutMapping("/{key}/status")
-    public ResponseEntity<OrderResponse> createOrder(@NotNull @Min(value = 1) @PathVariable("key") Long orderKey,
-                                                     @RequestBody @Valid @NotNull OrderStatusRequest statusRequest){
+    public ResponseEntity<OrderResponse> createOrder(@NotNull @Min(1) @PathVariable("key") Long orderKey,
+                                                     @RequestBody @Valid @NotNull OrderStatusRequest statusRequest) {
         Order orderResponse = orderService.updateOrderStatus(orderKey, statusRequest);
         return response(orderResponse);
     }
 
     @GetMapping("/{key}")
-    public ResponseEntity<OrderResponse> get(@NotNull @Min(value = 1) @PathVariable("key") Long orderKey){
+    public ResponseEntity<OrderResponse> get(@NotNull @Min(1) @PathVariable("key") Long orderKey) {
         return response(orderService.get(orderKey));
     }
 

@@ -10,16 +10,16 @@ import java.util.List;
 @Builder
 public class ProductPageResults {
 
-    @JsonProperty(value = "products")
+    @JsonProperty("products")
     private List<ProductResponse> products;
 
-    @JsonProperty(value = "currentPage")
+    @JsonProperty("currentPage")
     private int currentPage;
 
-    @JsonProperty(value = "totalItems")
+    @JsonProperty("totalItems")
     private long totalItems;
 
-    @JsonProperty(value = "totalPages")
+    @JsonProperty("totalPages")
     private int totalPages;
 
 }

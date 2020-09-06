@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OrderItemResponse {
 
-    @JsonProperty(value = "product")
+    @JsonProperty("product")
     private ProductResponse product;
 
-    @JsonProperty(value = "quantity")
+    @JsonProperty("quantity")
     private Integer quantity;
 
-    @JsonProperty(value = "price")
+    @JsonProperty("price")
     private Double price;
 
 }

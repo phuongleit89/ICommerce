@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CartItemResponse {
 
-    @JsonProperty(value = "product")
+    @JsonProperty("product")
     private ProductResponse product;
 
-    @JsonProperty(value = "quantity")
+    @JsonProperty("quantity")
     private int quantity;
 
 }

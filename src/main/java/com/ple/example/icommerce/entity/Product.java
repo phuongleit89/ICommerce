@@ -1,8 +1,17 @@
 package com.ple.example.icommerce.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -33,12 +42,12 @@ public class Product extends AuditModel {
 
     @Column(name = "price")
     @NotNull
-    @Min(value = 0)
+    @Min(0)
     private Double price;
 
     @Column(name = "quantity")
     @NotNull
-    @Min(value = 0)
+    @Min(0)
     private Integer quantity;
 
 }
