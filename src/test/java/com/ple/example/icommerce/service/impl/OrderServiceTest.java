@@ -2,6 +2,7 @@ package com.ple.example.icommerce.service.impl;
 
 import com.ple.example.icommerce.dao.CartRepository;
 import com.ple.example.icommerce.dao.OrderRepository;
+import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.OrderRequest;
 import com.ple.example.icommerce.dto.OrderStatusRequest;
 import com.ple.example.icommerce.entity.*;
@@ -35,6 +36,9 @@ public class OrderServiceTest {
     @MockBean
     private OrderRepository orderRepository;
 
+    @MockBean
+    private ProductRepository productRepository;
+
     private long cartKey = 1;
     private long productKey = 1;
     private long orderKey = 1;
@@ -49,6 +53,7 @@ public class OrderServiceTest {
         productMock = new Product();
         productMock.setKey(productKey);
         productMock.setPrice(12000d);
+        productMock.setQuantity(100);
 
         cartMock = new Cart();
         cartMock.setKey(cartKey);
@@ -80,6 +85,8 @@ public class OrderServiceTest {
         assertThat(order).isNotNull();
         verify(cartRepository).findById(eq(cartKey));
         verify(orderRepository).save(any());
+        verify(productRepository).save(any());
+        verify(cartRepository).delete(any());
     }
 
     @Test
@@ -94,6 +101,8 @@ public class OrderServiceTest {
         assertThrows(NotFoundException.class, () -> orderService.createOrder(cartKey, orderRequest));
         verify(cartRepository).findById(eq(cartKey));
         verify(orderRepository, never()).save(any());
+        verify(productRepository, never()).save(any());
+        verify(cartRepository, never()).delete(any());
     }
 
     @Test
@@ -109,6 +118,34 @@ public class OrderServiceTest {
         assertThat(ex.getMessage()).isEqualTo(CommerceBadRequestException.CART_ITEMS_EMPTY);
         verify(cartRepository).findById(eq(cartKey));
         verify(orderRepository, never()).save(any());
+        verify(productRepository, never()).save(any());
+        verify(cartRepository, never()).delete(any());
+    }
+
+    @Test
+    public void createOrder_When_OrderItemQuantityOutOfStock_Expect_BadRequestException() {
+        // given
+        OrderRequest orderRequest = OrderRequest.builder().build();
+        cartMock.setCartItems(cartItemsMock);
+        cartItemsMock.add(cartItemMock);
+
+        cartItemMock.setQuantity(10);
+        productMock.setQuantity(5);
+
+        // when
+        when(cartRepository.findById(eq(cartKey))).thenReturn(Optional.of(cartMock));
+        when(orderRepository.save(any())).thenReturn(orderMock);
+
+        // when
+        when(cartRepository.findById(eq(cartKey))).thenReturn(Optional.of(cartMock));
+
+        // then
+        CommerceBadRequestException ex = assertThrows(CommerceBadRequestException.class, () -> orderService.createOrder(cartKey, orderRequest));
+        assertThat(ex.getMessage()).isEqualTo(CommerceBadRequestException.PRODUCT_QUANTITY_OUT_OF_STOCK);
+        verify(cartRepository).findById(eq(cartKey));
+        verify(orderRepository, never()).save(any());
+        verify(productRepository, never()).save(any());
+        verify(cartRepository, never()).delete(any());
     }
 
     @Test
