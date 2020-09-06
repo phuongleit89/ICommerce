@@ -16,31 +16,31 @@ import java.util.Set;
 @Builder
 public class OrderResponse {
 
-    @JsonProperty(value = "key")
+    @JsonProperty("key")
     private Long key;
 
-    @JsonProperty(value = "name")
+    @JsonProperty("name")
     private String name;
 
-    @JsonProperty(value = "address")
+    @JsonProperty("address")
     private String address;
 
-    @JsonProperty(value = "city")
+    @JsonProperty("city")
     private String city;
 
-    @JsonProperty(value = "zip")
+    @JsonProperty("zip")
     private String zip;
 
-    @JsonProperty(value = "comment")
+    @JsonProperty("comment")
     private String comment;
 
-    @JsonProperty(value = "status")
+    @JsonProperty("status")
     private OrderStatus status;
 
-    @JsonProperty(value = "totalPrice")
+    @JsonProperty("totalPrice")
     private BigDecimal totalPrice;
 
-    @JsonProperty(value = "orderItems")
+    @JsonProperty("orderItems")
     private Set<OrderItemResponse> orderItems;
 
 }

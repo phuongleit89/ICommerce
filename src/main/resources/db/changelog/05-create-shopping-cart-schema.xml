@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
@@ -45,22 +45,22 @@
                           columnName="key"/>
     </changeSet>
     <changeSet id="05" author="ple">
-        <addForeignKeyConstraint  baseColumnNames="cart_key"
-                                  baseTableName="cart_item_table"
-                                  constraintName="fk_card_item_cart"
-                                  onDelete="CASCADE"
-                                  onUpdate="NO ACTION"
-                                  referencedColumnNames="key"
-                                  referencedTableName="cart_table"/>
+        <addForeignKeyConstraint baseColumnNames="cart_key"
+                                 baseTableName="cart_item_table"
+                                 constraintName="fk_card_item_cart"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="key"
+                                 referencedTableName="cart_table"/>
     </changeSet>
     <changeSet id="06" author="ple">
-        <addForeignKeyConstraint  baseColumnNames="product_key"
-                                  baseTableName="cart_item_table"
-                                  constraintName="fk_card_item_product"
-                                  onDelete="CASCADE"
-                                  onUpdate="NO ACTION"
-                                  referencedColumnNames="key"
-                                  referencedTableName="product_table"/>
+        <addForeignKeyConstraint baseColumnNames="product_key"
+                                 baseTableName="cart_item_table"
+                                 constraintName="fk_card_item_product"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="key"
+                                 referencedTableName="product_table"/>
     </changeSet>
 
 </databaseChangeLog>

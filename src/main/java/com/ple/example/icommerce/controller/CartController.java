@@ -8,7 +8,14 @@ import com.ple.example.icommerce.utils.ModelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -32,25 +39,25 @@ public class CartController {
     }
 
     @PutMapping("/{key}")
-    public ResponseEntity<CartResponse> addProduct(@NotNull @Min(value = 1) @PathVariable("key") Long cartKey,
-                                                   @Valid @RequestBody CartItemRequest cartItem){
+    public ResponseEntity<CartResponse> addProduct(@NotNull @Min(1) @PathVariable("key") Long cartKey,
+                                                   @Valid @RequestBody CartItemRequest cartItem) {
         return response(cartService.addProduct(cartKey, cartItem));
     }
 
     @PutMapping("/{key}/quantity")
-    public ResponseEntity<CartResponse> updateProductQuantity(@NotNull @Min(value = 1) @PathVariable("key") Long cartKey,
-                                                              @Valid @RequestBody CartItemRequest cartItem){
+    public ResponseEntity<CartResponse> updateProductQuantity(@NotNull @Min(1) @PathVariable("key") Long cartKey,
+                                                              @Valid @RequestBody CartItemRequest cartItem) {
         return response(cartService.updateProductQuantity(cartKey, cartItem.getProductKey(), cartItem.getQuantity()));
     }
 
     @DeleteMapping("/{key}/{product_key}")
-    public ResponseEntity<CartResponse> removeItem(@NotNull @Min(value = 1) @PathVariable("key") Long cartKey,
-                                                   @NotNull @Min(value = 1) @PathVariable("product_key") Long productKey){
+    public ResponseEntity<CartResponse> removeItem(@NotNull @Min(1) @PathVariable("key") Long cartKey,
+                                                   @NotNull @Min(1) @PathVariable("product_key") Long productKey) {
         return response(cartService.removeProduct(cartKey, productKey));
     }
 
     @GetMapping("/{key}")
-    public ResponseEntity<CartResponse> get(@NotNull @Min(value = 1) @PathVariable("key") Long cartKey){
+    public ResponseEntity<CartResponse> get(@NotNull @Min(1) @PathVariable("key") Long cartKey) {
         return response(cartService.get(cartKey));
     }
 

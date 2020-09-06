@@ -14,10 +14,10 @@ import java.util.Set;
 @Builder
 public class CartResponse {
 
-    @JsonProperty(value = "key")
+    @JsonProperty("key")
     private Long key;
 
-    @JsonProperty(value = "cartItems")
+    @JsonProperty("cartItems")
     private Set<CartItemResponse> cartItems;
 
 }

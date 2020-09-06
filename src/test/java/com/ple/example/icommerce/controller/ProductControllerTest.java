@@ -22,13 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ProductController.class)
 public class ProductControllerTest {
 
+    private final long productKey = 1;
     @Autowired
     private MockMvc mvc;
-
     @MockBean
     private ProductServiceImpl productService;
-
-    private long productKey = 1;
     private Product productMock;
 
     @BeforeEach

@@ -330,6 +330,8 @@ http://localhost:8080/swagger-ui/
   * **JUnit**: Test runner
   * **Mockito**: Test doubles (mocks, stubs)
   * **MockMVC**: Testing Spring MVC controllers
+  * **PMD**: Static code analyzer
+  * **Checkstyle**: Code style verification 
 
 ## License
 

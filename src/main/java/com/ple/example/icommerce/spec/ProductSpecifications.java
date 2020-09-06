@@ -9,6 +9,9 @@ import javax.persistence.criteria.Predicate;
 
 public class ProductSpecifications {
 
+    private ProductSpecifications() {
+    }
+
     public static Specification<Product> nameLike(String name) {
         return (root, query, cb) -> {
             if (StringUtils.isEmpty(name)) {

@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorItem {
 
-    @JsonProperty(value = "code")
+    @JsonProperty("code")
     private String code;
 
-    @JsonProperty(value = "message")
+    @JsonProperty("message")
     private String message;
 
 }

@@ -22,7 +22,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -57,7 +64,7 @@ public class ProductController {
 
     @GetMapping("/{key}")
     @Auditable(action = AuditActionType.VIEW_DETAIL)
-    public ResponseEntity<ProductResponse> get(@NotNull @Min(value = 0)
+    public ResponseEntity<ProductResponse> get(@NotNull @Min(0)
                                                @PathVariable("key")
                                                @AuditField(name = "key") Long key) {
         log.trace("Get detail product: #key: {}", key);
@@ -69,8 +76,8 @@ public class ProductController {
     }
 
     @PutMapping("/{key}")
-    public ResponseEntity<ProductResponse> update(@NotNull @Min(value = 0) @PathVariable("key") Long key,
-                                                  @Valid @RequestBody ProductRequest productRequest ) {
+    public ResponseEntity<ProductResponse> update(@NotNull @Min(0) @PathVariable("key") Long key,
+                                                  @Valid @RequestBody ProductRequest productRequest) {
         log.trace("Update the existing product: #key: {}, #product: {}", key, productRequest);
         Optional<Product> product = productService.update(key, productRequest);
         if (product.isPresent()) {
@@ -137,8 +144,7 @@ public class ProductController {
             // sort=[field, direction]
             orders.add(new Order(getSortDirection(sort[1]), sort[0]));
         }
-        Sort _sort = Sort.by(orders);
-        return _sort;
+        return Sort.by(orders);
     }
 
     private Direction getSortDirection(String direction) {

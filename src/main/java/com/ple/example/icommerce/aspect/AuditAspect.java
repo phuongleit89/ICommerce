@@ -33,7 +33,7 @@ public class AuditAspect {
     }
 
 
-    @After(value = "@annotation(com.ple.example.icommerce.annotation.Auditable)", argNames="joinPoint")
+    @After(value = "@annotation(com.ple.example.icommerce.annotation.Auditable)", argNames = "joinPoint")
     public void audit(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         Signature signature = joinPoint.getSignature();

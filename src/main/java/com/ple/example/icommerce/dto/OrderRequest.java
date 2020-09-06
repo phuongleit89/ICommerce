@@ -15,26 +15,26 @@ import javax.validation.constraints.Size;
 @Builder
 public class OrderRequest {
 
-    @JsonProperty(value = "name")
+    @JsonProperty("name")
     @NotNull
     @Size(max = 255)
     private String name;
 
-    @JsonProperty(value = "address")
+    @JsonProperty("address")
     @NotNull
     @Size(max = 255)
     private String address;
 
-    @JsonProperty(value = "city")
+    @JsonProperty("city")
     @NotNull
     @Size(max = 255)
     private String city;
 
-    @JsonProperty(value = "zip")
+    @JsonProperty("zip")
     @Size(max = 255)
     private String zip;
 
-    @JsonProperty(value = "comment")
+    @JsonProperty("comment")
     @NotNull
     @Size(max = 1024)
     private String comment;
