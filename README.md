@@ -1,8 +1,6 @@
 # ICommerce
 
 ![Build Status](https://img.shields.io/badge/Build-Passing-green)
-![Code Coverage](https://img.shields.io/badge/Coverage-100-green)
-![Quality Check](https://img.shields.io/badge/Quality_Check-Passing-green) 
 ![Java](https://img.shields.io/badge/Java-11-blue)
 ![Spring Boot](https://img.shields.io/badge/SpringBoot-2.3.3-blue) 
 ![Gradle](https://img.shields.io/badge/Gradle-6.4.1-blue)
@@ -21,12 +19,22 @@ A simple eCommerce Application with Spring Boot API.
 - Product Management
 - Cart Management
 - Order Management
+- Customer Audit Activities
 
 ## Get started
 
-You can clone this repository and use it localy:
+**Download**
 ```sh
 $ git clone https://github.com/phuongleit89/ICommerce.git
+```
+
+**MySql Config (Optional)**
+
+Project was setup with H2 Database. If you refer to use MySql add these configurations to application.properties
+```sh
+spring.datasource.url=jdbc:mysql://localhost:{PORT}/{DB-Name}
+spring.datasource.username=user
+spring.datasource.password=password
 ```
 
 **Run the Application**
@@ -36,13 +44,12 @@ $ git clone https://github.com/phuongleit89/ICommerce.git
 
 The application will start on port `8080` so you can send a sample request to `http://localhost:8080/actuator/health/` to see if you're up and running.
 
-## Documentation
-
 ## Database Relationship Diagram
-
 <img src="database-relationship-diagram.png" height=60% width=95%>
 
-For the Swagger UI
+## Documentation
+
+### Swagger UI
 ```bash
 http://localhost:8080/swagger-ui/
 ``` 
