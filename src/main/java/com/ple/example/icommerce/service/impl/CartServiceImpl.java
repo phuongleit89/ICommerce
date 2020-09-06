@@ -10,6 +10,9 @@ import com.ple.example.icommerce.exp.NotFoundException;
 import com.ple.example.icommerce.service.CartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -32,12 +35,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public Cart create() {
         Cart cart = new Cart();
         return cartRepository.save(cart);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public Cart addProduct(Long cartKey, CartItemRequest cartItemRequest) {
         Cart cart = cartRepository.findById(cartKey).orElseThrow(NotFoundException::new);
 
@@ -64,6 +69,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public Cart updateProductQuantity(Long cartKey, Long productKey, int quantity) {
         Cart cart = cartRepository.findById(cartKey).orElseThrow(NotFoundException::new);
 
@@ -80,6 +86,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public Cart removeProduct(Long cartKey, Long productKey) {
         Cart cart = cartRepository.findById(cartKey).orElseThrow(NotFoundException::new);
 
@@ -95,6 +102,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, readOnly = true)
     public Cart get(Long cartKey) {
         return cartRepository.findById(cartKey).orElseThrow(NotFoundException::new);
     }

@@ -2,6 +2,7 @@ package com.ple.example.icommerce.controller;
 
 import com.ple.example.icommerce.entity.Product;
 import com.ple.example.icommerce.service.impl.ProductServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,31 +23,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProductControllerTest {
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
     @MockBean
-    ProductServiceImpl productService;
+    private ProductServiceImpl productService;
+
+    private long productKey = 1;
+    private Product productMock;
+
+    @BeforeEach
+    public void setup() {
+        productMock = Product.builder()
+                .key(productKey).build();
+    }
 
     @Test
     public void getProduct_When_IsExisted_Expect_Success() throws Exception {
-        long key = 1;
-        Product product = Product.builder()
-                .key(key).build();
-        when(productService.get(eq(key)))
-                .thenReturn(Optional.of(product));
-        mvc.perform(MockMvcRequestBuilders.get("/product/{key}", key)
+        when(productService.get(eq(productKey)))
+                .thenReturn(Optional.of(productMock));
+        mvc.perform(MockMvcRequestBuilders.get("/product/{key}", productKey)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.key").value(key));
+                .andExpect(jsonPath("$.key").value(productKey));
     }
 
     @Test
     public void getProduct_When_IsNotFound_Expect_Fail() throws Exception {
-        long key = 1;
-        when(productService.get(eq(key)))
+        when(productService.get(eq(productKey)))
                 .thenReturn(Optional.empty());
-        mvc.perform(MockMvcRequestBuilders.get("/product/{key}", key)
+        mvc.perform(MockMvcRequestBuilders.get("/product/{key}", productKey)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(404));
