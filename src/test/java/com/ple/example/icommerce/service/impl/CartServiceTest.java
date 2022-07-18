@@ -6,7 +6,7 @@ import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.CartItemRequest;
 import com.ple.example.icommerce.entity.Cart;
 import com.ple.example.icommerce.entity.CartItem;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import com.ple.example.icommerce.exp.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

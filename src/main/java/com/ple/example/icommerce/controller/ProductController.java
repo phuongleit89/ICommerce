@@ -8,7 +8,7 @@ import com.ple.example.icommerce.dto.ProductPageResults;
 import com.ple.example.icommerce.dto.ProductRequest;
 import com.ple.example.icommerce.dto.ProductResponse;
 import com.ple.example.icommerce.entity.AuditActionType;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import com.ple.example.icommerce.service.ProductService;
 import com.ple.example.icommerce.utils.ModelUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -69,10 +69,7 @@ public class ProductController {
                                                @AuditField(name = "key") Long key) {
         log.trace("Get detail product: #key: {}", key);
         Optional<Product> product = productService.get(key);
-        if (product.isPresent()) {
-            return ResponseEntity.ok(ModelUtils.toProductResponse(product.get()));
-        }
-        return ResponseEntity.notFound().build();
+        return product.map(value -> ResponseEntity.ok(ModelUtils.toProductResponse(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{key}")
@@ -80,10 +77,7 @@ public class ProductController {
                                                   @Valid @RequestBody ProductRequest productRequest) {
         log.trace("Update the existing product: #key: {}, #product: {}", key, productRequest);
         Optional<Product> product = productService.update(key, productRequest);
-        if (product.isPresent()) {
-            return ResponseEntity.ok(ModelUtils.toProductResponse(product.get()));
-        }
-        return ResponseEntity.notFound().build();
+        return product.map(value -> ResponseEntity.ok(ModelUtils.toProductResponse(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search")
@@ -118,7 +112,7 @@ public class ProductController {
         }
 
         List<ProductResponse> productResponses = products.stream()
-                .map(product -> ModelUtils.toProductResponse(product)).collect(Collectors.toList());
+                .map(ModelUtils::toProductResponse).collect(Collectors.toList());
         ProductPageResults pageResults = ProductPageResults.builder()
                 .products(productResponses)
                 .currentPage(productPage.getNumber())

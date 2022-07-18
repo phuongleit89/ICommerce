@@ -4,7 +4,7 @@ import com.ple.example.icommerce.config.JpaConfig;
 import com.ple.example.icommerce.entity.Order;
 import com.ple.example.icommerce.entity.OrderItem;
 import com.ple.example.icommerce.entity.OrderStatus;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,8 @@ public class OrderRepositoryTest {
                 .name("product-name")
                 .price(12000d)
                 .quantity(100)
-                .sku(UUID.randomUUID().toString()).build();
+                .sku(UUID.randomUUID().toString())
+                .shopId(10).build();
         product = productRepository.save(product);
         productKey = product.getKey();
 

@@ -1,13 +1,19 @@
 package com.ple.example.icommerce.dao;
 
 import com.ple.example.icommerce.config.JpaConfig;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.dao.projection.ProductDto;
+import com.ple.example.icommerce.dao.projection.ProductView;
+import com.ple.example.icommerce.entity.tenant.Product;
+import com.ple.example.icommerce.spec.ProductSpecifications;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.validation.ConstraintViolationException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,12 +31,8 @@ class ProductRepositoryTest {
     @Test
     public void saveProduct_When_ValidData_Expect_Success() {
         String sku = "001002";
-        Product product = Product.builder()
-                .name("name 01")
-                .sku(sku)
-                .price(12000d)
-                .quantity(100).build();
-        Product createdProduct = productRepository.save(product);
+        String name = "name 01";
+        Product createdProduct = createProduct(sku, name, 100);
         assertThat(createdProduct).isNotNull();
         assertThat(createdProduct.getSku()).isEqualTo(sku);
     }
@@ -41,19 +43,15 @@ class ProductRepositoryTest {
         Product product = Product.builder()
                 .sku(sku)
                 .price(12000d)
-                .quantity(100).build();
+                .quantity(100)
+                .shopId(10).build();
         assertThrows(ConstraintViolationException.class, () -> productRepository.save(product));
     }
 
     @Test
     public void saveProduct_When_SkuIsDuplicated_Expect_ExceptionOccur() {
         String sku = "001003";
-        Product product = Product.builder()
-                .name("name 01")
-                .sku(sku)
-                .price(12000d)
-                .quantity(100).build();
-        Product createdProduct = productRepository.save(product);
+        Product createdProduct = createProduct(sku, "name 01", 100);
         assertThat(createdProduct).isNotNull();
         assertThat(createdProduct.getSku()).isEqualTo(sku);
 
@@ -74,12 +72,7 @@ class ProductRepositoryTest {
     @Test
     public void findProductByKey_When_KeyIsExisted_Expect_Success() {
         String sku = "001004";
-        Product product = Product.builder()
-                .name("name 01")
-                .sku(sku)
-                .price(12000d)
-                .quantity(100).build();
-        Product createdProduct = productRepository.save(product);
+        Product createdProduct = createProduct(sku, "name 01", 100);
         assertThat(createdProduct).isNotNull();
         assertThat(createdProduct.getKey()).isNotNull();
         Long key = createdProduct.getKey();
@@ -97,17 +90,92 @@ class ProductRepositoryTest {
     @Test
     public void findProductBySku_When_SkuIsExisted_Expect_Success() {
         String sku = "001005";
-        Product product = Product.builder()
-                .name("name 01")
-                .sku(sku)
-                .price(12000d)
-                .quantity(100).build();
-        Product createdProduct = productRepository.save(product);
+        Product createdProduct = createProduct(sku, "name 01", 100);
         assertThat(createdProduct).isNotNull();
         assertThat(createdProduct.getKey()).isNotNull();
 
         Product foundProduct = productRepository.findBySku(sku);
         assertThat(foundProduct).isNotNull();
+    }
+
+    @Test
+    public void findProductByKey_When_KeyExpected_And_UseProjection_Success() {
+        String sku = "001005";
+        String name = "name 02";
+        int quantity = 100;
+        Product createdProduct = createProduct(sku, name, quantity);
+        assertThat(createdProduct).isNotNull();
+        Long key = createdProduct.getKey();
+        assertThat(key).isNotNull();
+
+        ProductView foundProduct = productRepository.findByKey(key);
+        assertThat(foundProduct).isNotNull();
+        assertThat(foundProduct.getKey()).isEqualTo(key);
+        assertThat(foundProduct.getSku()).isEqualTo(sku);
+        assertThat(foundProduct.getDetail()).isEqualTo(name + " - " + quantity);
+    }
+
+    @Test
+    public void findProductBySku_When_SkuExpected_And_UseDynamicProjection_Success() {
+        String sku = "001005";
+        String name = "name 02";
+        int quantity = 100;
+        Product createdProduct = createProduct(sku, name, quantity);
+        assertThat(createdProduct).isNotNull();
+        Long key = createdProduct.getKey();
+        assertThat(key).isNotNull();
+
+        // return entity type
+        Product foundProduct = productRepository.findBySku(sku, Product.class);
+        assertThat(foundProduct).isNotNull();
+        assertThat(foundProduct.getSku()).isEqualTo(sku);
+
+        // return interface projection
+        ProductView productView = productRepository.findBySku(sku, ProductView.class);
+        assertThat(productView).isNotNull();
+        assertThat(productView.getSku()).isEqualTo(sku);
+
+        // return class projection
+        ProductDto productDto = productRepository.findBySku(sku, ProductDto.class);
+        assertThat(productDto).isNotNull();
+        assertThat(productDto.getSku()).isEqualTo(sku);
+    }
+
+    @Test
+    public void findAllProduct_When_UseSpecific_Success() {
+        Product product01 = createProduct("001006", "name 001006", 100);
+        assertThat(product01).isNotNull();
+        Long key01 = product01.getKey();
+        assertThat(key01).isNotNull();
+
+        Product product02 = createProduct("00100", "name 001007", 100);
+        assertThat(product02).isNotNull();
+        Long key02 = product02.getKey();
+        assertThat(key02).isNotNull();
+
+        Specification<Product> specs = ProductSpecifications.nameLike("001006");
+        Sort sort = Sort.by(Sort.Direction.ASC, "key");
+        List<ProductView> list = productRepository.findAll(specs, 0, 100, sort, ProductView.class);
+        System.out.println("list = " + list);
+
+        assertThat(list.size()).isEqualTo(1);
+        assertThat(list.get(0).getKey()).isEqualTo(key01);
+        System.out.println("list.get(0).getDetail() = " + list.get(0).getDetail());
+    }
+
+
+    // --------------------
+    // PRIVATE METHOD
+    // --------------------
+
+    private Product createProduct(String sku, String name, int quantity) {
+        Product product = Product.builder()
+                .name(name)
+                .sku(sku)
+                .price(12000d)
+                .quantity(quantity)
+                .shopId(10).build();
+        return productRepository.save(product);
     }
 
 }

@@ -3,7 +3,7 @@ package com.ple.example.icommerce;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.ProductRequest;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

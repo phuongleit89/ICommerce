@@ -9,7 +9,7 @@ import com.ple.example.icommerce.entity.Cart;
 import com.ple.example.icommerce.entity.CartItem;
 import com.ple.example.icommerce.entity.Order;
 import com.ple.example.icommerce.entity.OrderStatus;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import com.ple.example.icommerce.exp.CommerceBadRequestException;
 import com.ple.example.icommerce.exp.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +56,7 @@ public class OrderServiceTest {
         productMock.setKey(productKey);
         productMock.setPrice(12000d);
         productMock.setQuantity(100);
+        productMock.setShopId(10);
 
         cartMock = new Cart();
         cartMock.setKey(cartKey);

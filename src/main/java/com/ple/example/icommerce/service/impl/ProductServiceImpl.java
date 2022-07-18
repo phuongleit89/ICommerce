@@ -5,7 +5,7 @@ import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.ProductFilter;
 import com.ple.example.icommerce.dto.ProductRequest;
 import com.ple.example.icommerce.entity.PriceHistory;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import com.ple.example.icommerce.exp.CommerceBadRequestException;
 import com.ple.example.icommerce.service.ProductService;
 import com.ple.example.icommerce.spec.ProductSpecifications;
@@ -28,6 +28,9 @@ public class ProductServiceImpl implements ProductService {
 
     private final PriceHistoryRepository priceHistoryRepository;
 
+    // TODO: @ple - waiting to get from jwt token
+    private final Integer shopId = 10;
+
     public ProductServiceImpl(ProductRepository productRepository,
                               PriceHistoryRepository priceHistoryRepository) {
         this.productRepository = productRepository;
@@ -42,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = new Product();
         BeanUtils.copyProperties(productRequest, product);
+        product.setShopId(shopId);
         product = productRepository.save(product);
 
         keepTrackPriceChange(product);

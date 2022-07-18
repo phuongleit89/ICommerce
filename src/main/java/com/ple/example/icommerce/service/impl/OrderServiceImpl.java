@@ -10,7 +10,7 @@ import com.ple.example.icommerce.entity.CartItem;
 import com.ple.example.icommerce.entity.Order;
 import com.ple.example.icommerce.entity.OrderItem;
 import com.ple.example.icommerce.entity.OrderStatus;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import com.ple.example.icommerce.exp.CommerceBadRequestException;
 import com.ple.example.icommerce.exp.NotFoundException;
 import com.ple.example.icommerce.service.OrderService;

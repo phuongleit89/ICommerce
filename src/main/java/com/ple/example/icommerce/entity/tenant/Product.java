@@ -1,10 +1,13 @@
-package com.ple.example.icommerce.entity;
+package com.ple.example.icommerce.entity.tenant;
 
+import com.ple.example.icommerce.entity.AuditModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.Filters;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +21,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "product_table")
+@Filters({@Filter(name = "filterByShopId")})
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,5 +53,10 @@ public class Product extends AuditModel {
     @NotNull
     @Min(0)
     private Integer quantity;
+
+    @Column(name = "shopId")
+    @NotNull
+    @Min(0)
+    private Integer shopId;
 
 }

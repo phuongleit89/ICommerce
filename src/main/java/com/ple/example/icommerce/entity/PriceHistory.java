@@ -1,5 +1,6 @@
 package com.ple.example.icommerce.entity;
 
+import com.ple.example.icommerce.entity.tenant.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

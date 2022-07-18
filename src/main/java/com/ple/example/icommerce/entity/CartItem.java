@@ -1,5 +1,6 @@
 package com.ple.example.icommerce.entity;
 
+import com.ple.example.icommerce.entity.tenant.Product;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -4,7 +4,7 @@ import com.ple.example.icommerce.dao.PriceHistoryRepository;
 import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.ProductRequest;
 import com.ple.example.icommerce.entity.PriceHistory;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import com.ple.example.icommerce.exp.CommerceBadRequestException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
@@ -48,6 +48,7 @@ class ProductServiceTest {
 
         Product productMock = new Product();
         productMock.setKey(key);
+        productMock.setShopId(10);
         BeanUtils.copyProperties(productRequest, productMock);
 
         PriceHistory priceHistoryMock = PriceHistory.builder()
@@ -80,6 +81,7 @@ class ProductServiceTest {
 
         Product productMock = new Product();
         productMock.setKey(key);
+        productMock.setShopId(10);
         BeanUtils.copyProperties(productRequest, productMock);
 
         // when
@@ -101,7 +103,8 @@ class ProductServiceTest {
                 .name("name")
                 .sku("sku")
                 .price(12000d)
-                .quantity(100).build();
+                .quantity(100)
+                .shopId(10).build();
         // when
         when(productRepository.findById(eq(key))).thenReturn(Optional.of(productMock));
         // then
@@ -139,6 +142,7 @@ class ProductServiceTest {
         BeanUtils.copyProperties(productRequest, productMock);
         productMock.setKey(key);
         productMock.setSku("001002");
+        productMock.setShopId(10);
 
         // when
         when(productRepository.findById(eq(key))).thenReturn(Optional.of(productMock));
@@ -168,6 +172,7 @@ class ProductServiceTest {
         BeanUtils.copyProperties(productRequest, productMock);
         productMock.setKey(key);
         productMock.setSku("001002");
+        productMock.setShopId(10);
 
         Product foundSkuProduct = new Product();
         productMock.setKey(key + 1);
@@ -199,6 +204,7 @@ class ProductServiceTest {
         Product productMock = new Product();
         BeanUtils.copyProperties(productRequest, productMock);
         productMock.setKey(key);
+        productMock.setShopId(10);
 
         // when
         when(productRepository.findById(eq(key))).thenReturn(Optional.of(productMock));
@@ -229,6 +235,7 @@ class ProductServiceTest {
         BeanUtils.copyProperties(productRequest, productMock);
         productMock.setKey(key);
         productMock.setPrice(20000d);
+        productMock.setShopId(10);
 
         PriceHistory priceHistory = PriceHistory.builder()
                 .key(1L)

@@ -24,6 +24,9 @@
             <column name="quantity" type="int">
                 <constraints nullable="false"/>
             </column>
+            <column name="shop_id" type="int">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="02" author="ple">

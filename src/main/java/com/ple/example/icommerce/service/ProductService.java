@@ -2,7 +2,7 @@ package com.ple.example.icommerce.service;
 
 import com.ple.example.icommerce.dto.ProductFilter;
 import com.ple.example.icommerce.dto.ProductRequest;
-import com.ple.example.icommerce.entity.Product;
+import com.ple.example.icommerce.entity.tenant.Product;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;

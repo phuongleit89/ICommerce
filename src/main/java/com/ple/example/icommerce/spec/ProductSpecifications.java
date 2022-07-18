@@ -1,7 +1,7 @@
 package com.ple.example.icommerce.spec;
 
-import com.ple.example.icommerce.entity.Product;
-import com.ple.example.icommerce.entity.Product_;
+import com.ple.example.icommerce.entity.tenant.Product;
+import com.ple.example.icommerce.entity.tenant.Product_;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
