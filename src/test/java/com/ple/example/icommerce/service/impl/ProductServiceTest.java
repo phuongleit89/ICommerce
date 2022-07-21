@@ -104,7 +104,7 @@ class ProductServiceTest {
                 .sku("sku")
                 .price(12000d)
                 .quantity(100)
-                .shopId(10).build();
+                .build();
         // when
         when(productRepository.findById(eq(key))).thenReturn(Optional.of(productMock));
         // then

@@ -1,6 +1,5 @@
 package com.ple.example.icommerce.entity.tenant;
 
-import com.ple.example.icommerce.entity.AuditModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,15 +18,17 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import static com.ple.example.icommerce.constant.JpaConstants.FILTER_BY_SHOP_ID_NAME;
+
 @Entity
 @Table(name = "product_table")
-@Filters({@Filter(name = "filterByShopId")})
+@Filters({@Filter(name = FILTER_BY_SHOP_ID_NAME)})
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Product extends AuditModel {
+public class Product extends TenantModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,10 +54,5 @@ public class Product extends AuditModel {
     @NotNull
     @Min(0)
     private Integer quantity;
-
-    @Column(name = "shopId")
-    @NotNull
-    @Min(0)
-    private Integer shopId;
 
 }

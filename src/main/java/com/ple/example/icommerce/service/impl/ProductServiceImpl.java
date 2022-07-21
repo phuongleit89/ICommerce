@@ -1,5 +1,6 @@
 package com.ple.example.icommerce.service.impl;
 
+import com.ple.example.icommerce.context.SecurityContextHolder;
 import com.ple.example.icommerce.dao.PriceHistoryRepository;
 import com.ple.example.icommerce.dao.ProductRepository;
 import com.ple.example.icommerce.dto.ProductFilter;
@@ -29,7 +30,10 @@ public class ProductServiceImpl implements ProductService {
     private final PriceHistoryRepository priceHistoryRepository;
 
     // TODO: @ple - waiting to get from jwt token
-    private final Integer shopId = 10;
+    private static final Integer shopId = 10;
+    static {
+        SecurityContextHolder.setShopId(shopId);
+    }
 
     public ProductServiceImpl(ProductRepository productRepository,
                               PriceHistoryRepository priceHistoryRepository) {
@@ -45,7 +49,6 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = new Product();
         BeanUtils.copyProperties(productRequest, product);
-        product.setShopId(shopId);
         product = productRepository.save(product);
 
         keepTrackPriceChange(product);

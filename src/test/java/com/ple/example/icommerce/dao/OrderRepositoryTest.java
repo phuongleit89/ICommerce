@@ -1,6 +1,7 @@
 package com.ple.example.icommerce.dao;
 
 import com.ple.example.icommerce.config.JpaConfig;
+import com.ple.example.icommerce.context.SecurityContextHolder;
 import com.ple.example.icommerce.entity.Order;
 import com.ple.example.icommerce.entity.OrderItem;
 import com.ple.example.icommerce.entity.OrderStatus;
@@ -37,15 +38,23 @@ public class OrderRepositoryTest {
     private Set<OrderItem> orderItems;
     private OrderItem orderItem;
 
+    private static Integer shopId = 10;
+    static {
+        SecurityContextHolder.setShopId(shopId);
+        System.out.println("OrderRepositoryTest.Init...");
+    }
+
 
     @BeforeEach
     public void setup() {
+        System.out.println("OrderRepositoryTest.BeforeEach...");
+
         product = Product.builder()
                 .name("product-name")
                 .price(12000d)
                 .quantity(100)
                 .sku(UUID.randomUUID().toString())
-                .shopId(10).build();
+                .build();
         product = productRepository.save(product);
         productKey = product.getKey();
 

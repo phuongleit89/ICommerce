@@ -1,10 +1,12 @@
 package com.ple.example.icommerce.dao;
 
 import com.ple.example.icommerce.config.JpaConfig;
+import com.ple.example.icommerce.context.SecurityContextHolder;
 import com.ple.example.icommerce.dao.projection.ProductDto;
 import com.ple.example.icommerce.dao.projection.ProductView;
 import com.ple.example.icommerce.entity.tenant.Product;
 import com.ple.example.icommerce.spec.ProductSpecifications;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,6 +30,17 @@ class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    private static Integer shopId = 10;
+    static {
+        SecurityContextHolder.setShopId(shopId);
+        System.out.println("ProductRepositoryTest.Init...");
+    }
+
+    @BeforeEach
+    public void setup() {
+        System.out.println("ProductRepositoryTest.BeforeEach...");
+    }
+
     @Test
     public void saveProduct_When_ValidData_Expect_Success() {
         String sku = "001002";
@@ -35,6 +48,7 @@ class ProductRepositoryTest {
         Product createdProduct = createProduct(sku, name, 100);
         assertThat(createdProduct).isNotNull();
         assertThat(createdProduct.getSku()).isEqualTo(sku);
+        assertThat(createdProduct.getShopId()).isEqualTo(shopId);
     }
 
     @Test
@@ -44,7 +58,7 @@ class ProductRepositoryTest {
                 .sku(sku)
                 .price(12000d)
                 .quantity(100)
-                .shopId(10).build();
+                .build();
         assertThrows(ConstraintViolationException.class, () -> productRepository.save(product));
     }
 
@@ -79,6 +93,7 @@ class ProductRepositoryTest {
 
         Optional<Product> foundProduct = productRepository.findById(key);
         assertTrue(foundProduct.isPresent());
+        assertThat(foundProduct.get().getShopId()).isEqualTo(shopId);
     }
 
     @Test
@@ -96,6 +111,7 @@ class ProductRepositoryTest {
 
         Product foundProduct = productRepository.findBySku(sku);
         assertThat(foundProduct).isNotNull();
+        assertThat(foundProduct.getShopId()).isEqualTo(shopId);
     }
 
     @Test
@@ -113,6 +129,7 @@ class ProductRepositoryTest {
         assertThat(foundProduct.getKey()).isEqualTo(key);
         assertThat(foundProduct.getSku()).isEqualTo(sku);
         assertThat(foundProduct.getDetail()).isEqualTo(name + " - " + quantity);
+        assertThat(foundProduct.getShopId()).isEqualTo(shopId);
     }
 
     @Test
@@ -129,16 +146,19 @@ class ProductRepositoryTest {
         Product foundProduct = productRepository.findBySku(sku, Product.class);
         assertThat(foundProduct).isNotNull();
         assertThat(foundProduct.getSku()).isEqualTo(sku);
+        assertThat(foundProduct.getShopId()).isEqualTo(shopId);
 
         // return interface projection
         ProductView productView = productRepository.findBySku(sku, ProductView.class);
         assertThat(productView).isNotNull();
         assertThat(productView.getSku()).isEqualTo(sku);
+        assertThat(foundProduct.getShopId()).isEqualTo(shopId);
 
         // return class projection
         ProductDto productDto = productRepository.findBySku(sku, ProductDto.class);
         assertThat(productDto).isNotNull();
         assertThat(productDto.getSku()).isEqualTo(sku);
+        assertThat(productDto.getShopId()).isEqualTo(shopId);
     }
 
     @Test
@@ -159,8 +179,10 @@ class ProductRepositoryTest {
         System.out.println("list = " + list);
 
         assertThat(list.size()).isEqualTo(1);
-        assertThat(list.get(0).getKey()).isEqualTo(key01);
-        System.out.println("list.get(0).getDetail() = " + list.get(0).getDetail());
+        ProductView foundProductView = list.get(0);
+        assertThat(foundProductView.getKey()).isEqualTo(key01);
+        assertThat(foundProductView.getShopId()).isEqualTo(shopId);
+        System.out.println("list.get(0).getDetail() = " + foundProductView.getDetail());
     }
 
 
@@ -173,8 +195,7 @@ class ProductRepositoryTest {
                 .name(name)
                 .sku(sku)
                 .price(12000d)
-                .quantity(quantity)
-                .shopId(10).build();
+                .quantity(quantity).build();
         return productRepository.save(product);
     }
 
